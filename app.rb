@@ -1,33 +1,33 @@
 require 'rubygems'
 require 'sinatra'
-# require 'sinatra/reloader'
-# require './amazon_api.rb'
-# require 'json'
+require 'sinatra/reloader'
+require './amazon_api.rb'
+require 'json'
 
 # ruby main.rb -o localhostで実行
 
 get '/' do
-  "Hello World."
+  "Hello Taniguchi."
 end
 
-# get '/api/v1/search/:isbn' do |isbn|
-# 	# 9784101181066
-# 	books, stocks = BookSearcher::search(isbn)
+get '/api/v1/search/:isbn' do |isbn|
+	# 9784101181066
+	books, stocks = BookSearcher::search(isbn)
 
-# 	hash = {}
+	hash = {}
 
-# 	hash["BookInfo"] = books.first.to_hash
+	hash["BookInfo"] = books.first.to_hash
 
-# 	stocks_array = []
+	stocks_array = []
 
-# 	stocks.each do |stock|
-# 		stocks_array.push(stock.to_hash)
-# 	end
+	stocks.each do |stock|
+		stocks_array.push(stock.to_hash)
+	end
 
-# 	hash["Stocks"] = stocks_array
+	hash["Stocks"] = stocks_array
 
-# 	return hash.to_json
-# end
+	return hash.to_json
+end
 
 =begin
 get '/hello/:fname/?:lname?'do |f, l|

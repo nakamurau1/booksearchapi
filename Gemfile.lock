@@ -1,6 +1,7 @@
 GEM
   remote: http://rubygems.org/
   specs:
+    kgio (2.9.3)
     rack (1.6.1)
     rack-protection (1.5.3)
       rack
@@ -14,4 +15,5 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  kgio
   sinatra
