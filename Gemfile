@@ -1,9 +1,9 @@
-source :rubygemssource 'https://rubygems.org'
+source 'https://rubygems.org'
 ruby '2.0.0'
 
 gem 'sinatra'
 gem 'sinatra-contrib'
-gem 'nokogiri', '1.5.11'
+gem 'nokogiri'
 gem 'amazon-ecs'
 
 # group :production do

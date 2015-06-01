@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 require 'amazon/ecs'
 require 'open-uri'
 require 'nokogiri'
