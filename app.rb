@@ -4,7 +4,7 @@ require 'sinatra/reloader'
 require './amazon_api.rb'
 require 'json'
 
-# ruby main.rb -o localhostで実行
+# ruby app.rb -o localhostで実行
 
 get '/' do
   "Hello Taniguchi."

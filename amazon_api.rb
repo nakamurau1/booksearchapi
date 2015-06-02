@@ -32,7 +32,7 @@ class Book
 		hash = {"title" => @title,
 		        "isbn" => @isbn,
 		        "price" => @price,
-		        "image" => @image,
+		        "image" => @image_url,
 		        "author" => @author,
 		        "publisher" => @publisher,
 		        "asin" => @asin,
