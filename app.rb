@@ -21,6 +21,8 @@ get '/api/v1/search/:isbn' do |isbn|
 	stocks_array = []
 
 	stocks.each do |stock|
+		next if stock == nil 
+
 		stocks_array.push(stock.to_hash)
 	end
 

@@ -4,6 +4,7 @@ require 'nokogiri'
 require 'uri'
 require 'kconv'
 require 'json'
+require 'pry'
 
 # todo: ActiveRecordを使うようにする
 class Book
@@ -121,6 +122,7 @@ class BookSearcher
 
 			# Bookoff
 			bookoff_stock = get_bookoff_price(new_book)
+
 			stock_infos << bookoff_stock
 		end
 
@@ -134,7 +136,15 @@ class BookSearcher
 
 			bookoff_url = "http://www.bookoffonline.co.jp/feed/search,st=u,q=#{book.jan}"
 
-			doc = Nokogiri::XML(open(bookoff_url).read)
+			doc = nil
+			begin
+				doc = Nokogiri::XML(open(bookoff_url).read)
+			rescue => ex
+
+				binding.pry
+				
+				return nil
+			end
 
 			items = doc.xpath("//rss/channel/item")
 			item = items.first
