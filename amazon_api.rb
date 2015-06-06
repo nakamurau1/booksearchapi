@@ -141,8 +141,6 @@ class BookSearcher
 				doc = Nokogiri::XML(open(bookoff_url).read)
 			rescue => ex
 
-				binding.pry
-				
 				return nil
 			end
 
