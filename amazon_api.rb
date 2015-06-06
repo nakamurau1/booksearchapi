@@ -4,7 +4,7 @@ require 'nokogiri'
 require 'uri'
 require 'kconv'
 require 'json'
-require 'pry'
+# require 'pry'
 
 # todo: ActiveRecordを使うようにする
 class Book
