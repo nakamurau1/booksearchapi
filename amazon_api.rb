@@ -75,61 +75,95 @@ end
 
 class BookSearcher
 
-	def self.search(isbn)
+	ASSOCIATE_TAG = "yuiweb-22"
+	AWS_ACCESS_KEY_ID = "AKIAJWBU6APZDQHRFEOQ"
+	AWS_SECRET_KEY = "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"
 
-		Amazon::Ecs.options = {
-			:associate_tag => 'yuiweb-22',
-			:AWS_access_key_id => 'AKIAJWBU6APZDQHRFEOQ',
-			:AWS_secret_key => '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'
-		}
+	# isbnで書籍情報とその在庫情報を検索します。
+	# 引数
+	# 	isbn : ISBNコード
+	# 戻り値
+	# 	books, stocks : 書籍情報の一覧、 在庫情報の一覧
+	def self.search_by_isbn(isbn)
 
-		#商品検索
-		res = Amazon::Ecs.item_search(
-			isbn,
-			{:search_index => 'Books',
-			 :response_group => 'Medium',
-			 :country=>'jp'}
-			)
+		self.search_by(isbn,true)
+	end
 
-		books = []
-		stock_infos = []
+	# タイトルから書籍情報を検索します。
+	# 引数
+	# 	title : 書籍のタイトル
+	# 戻り値
+	# 	books : 書籍情報の一覧
+	def self.search_by_title(title)
 
-		res.items.each do |item|
+		books, stocks = self.search_by(title,false)
 
-			new_book = Book.new
-
-			new_book.title = item.get("ItemAttributes/Title")
-			new_book.price = item.get("ItemAttributes/ListPrice/Amount")
-			new_book.image_url = item.get("MediumImage/URL")
-			new_book.isbn = item.get("ItemAttributes/ISBN")
-			new_book.author = item.get("ItemAttributes/Author")
-			new_book.publisher = item.get("ItemAttributes/Publisher")
-			new_book.asin = item.get("ASIN")
-			new_book.jan = item.get("ItemAttributes/EAN")
-
-			books << new_book
-
-			# Amazon
-			amazon_stock = StockInfo.new
-			amazon_stock.lowest_new_price = item.get("OfferSummary/LowestNewPrice/Amount")
-			amazon_stock.lowest_used_price = item.get("OfferSummary/LowestUsedPrice/Amount")
-			amazon_stock.selling_agent = "amazon.co.jp"
-			amazon_stock.isbn = new_book.isbn
-			amazon_stock.jan = new_book.jan
-			amazon_stock.url = item.get("DetailPageURL")
-
-			stock_infos << amazon_stock
-
-			# Bookoff
-			bookoff_stock = get_bookoff_price(new_book)
-
-			stock_infos << bookoff_stock
-		end
-
-		return books, stock_infos
+		return books
 	end
 
 	:private
+
+		# Amazonの書籍情報を検索します
+		# keyword : 検索キーワード
+		# search_stocks : 在庫情報を検索するか
+		def self.search_by(keyword, search_stocks)
+
+			Amazon::Ecs.options = {
+				:associate_tag => ASSOCIATE_TAG,
+				:AWS_access_key_id => AWS_ACCESS_KEY_ID,
+				:AWS_secret_key => AWS_SECRET_KEY
+			}
+
+			puts "検索ワード #{keyword}"
+
+			#商品検索
+			res = Amazon::Ecs.item_search(
+				keyword,
+				{:search_index => 'Books',
+				 :response_group => 'Medium',
+				 :country=>'jp'}
+				)
+
+			books = []
+			stock_infos = []
+
+			res.items.each do |item|
+
+				new_book = Book.new
+
+				new_book.title = item.get("ItemAttributes/Title")
+				new_book.price = item.get("ItemAttributes/ListPrice/Amount")
+				new_book.image_url = item.get("MediumImage/URL")
+				new_book.isbn = item.get("ItemAttributes/ISBN")
+				new_book.author = item.get("ItemAttributes/Author")
+				new_book.publisher = item.get("ItemAttributes/Publisher")
+				new_book.asin = item.get("ASIN")
+				new_book.jan = item.get("ItemAttributes/EAN")
+
+				books << new_book
+
+				# 在庫情報を検索しない場合は以降の処理を飛ばす
+				next if !search_stocks
+
+				# Amazon
+				amazon_stock = StockInfo.new
+				amazon_stock.lowest_new_price = item.get("OfferSummary/LowestNewPrice/Amount")
+				amazon_stock.lowest_used_price = item.get("OfferSummary/LowestUsedPrice/Amount")
+				amazon_stock.selling_agent = "amazon.co.jp"
+				amazon_stock.isbn = new_book.isbn
+				amazon_stock.jan = new_book.jan
+				amazon_stock.url = item.get("DetailPageURL")
+
+				stock_infos << amazon_stock
+
+				# Bookoff
+				bookoff_stock = get_bookoff_price(new_book)
+
+				stock_infos << bookoff_stock
+			end
+
+			return books, stock_infos
+		end
 
 		# Bookoffから価格情報を取得します
 		def self.get_bookoff_price(book)

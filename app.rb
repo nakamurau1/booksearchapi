@@ -10,9 +10,11 @@ get '/' do
   "Hello Taniguchi."
 end
 
-get '/api/v1/search/:isbn' do |isbn|
+# isbnで書籍情報とその在庫情報を取得します。
+# http://localhost:4567/api/v1/search/isbn/9784101181066
+get '/api/v1/search/isbn/:isbn' do |isbn|
 	# 9784101181066
-	books, stocks = BookSearcher::search(isbn)
+	books, stocks = BookSearcher::search_by_isbn(isbn)
 
 	hash = {}
 
@@ -31,17 +33,22 @@ get '/api/v1/search/:isbn' do |isbn|
 	return hash.to_json
 end
 
-=begin
-get '/hello/:fname/?:lname?'do |f, l|
-	"hello = #{f} #{l}"
-end
+# http://localhost:4567/api/v1/search/title/YUI
+get '/api/v1/search/title/:title' do |title|
 
-get %r{/users/([0-9]*)} do |i|
-	"user id = #{i}"
-end
+	books = BookSearcher::search_by_title(title)
 
-get '/about2'do
-	'about this site page'
+	books_array = []
+
+	books.each do |book|
+		next if book == nil
+
+		books_array.push(book.to_hash)
+	end
+
+	hash = {}
+	hash["BookInfos"] = books_array
+
+	return hash.to_json
 end
-=end
 
