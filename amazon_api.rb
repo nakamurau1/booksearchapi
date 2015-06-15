@@ -4,6 +4,7 @@ require 'nokogiri'
 require 'uri'
 require 'kconv'
 require 'json'
+require './Util.rb'
 # require 'pry'
 
 # todo: ActiveRecordを使うようにする
@@ -168,44 +169,51 @@ class BookSearcher
 		# Bookoffから価格情報を取得します
 		def self.get_bookoff_price(book)
 
+			# st=uがないと、RSSに中古価格の情報が含まれない
 			bookoff_url = "http://www.bookoffonline.co.jp/feed/search,st=u,q=#{book.jan}"
 
-			doc = nil
+			puts "bookoff_url #{bookoff_url}"
+
 			begin
 				doc = Nokogiri::XML(open(bookoff_url).read)
+
+				items = doc.xpath("//rss/channel/item")
+				item = items.first
+
+				description = item.xpath("description").text
+
+				lowest_new_price_re = "定価：￥([\\d|,]+)"
+				lowest_new_price_md = /#{lowest_new_price_re}/.match(description)
+
+				lowest_used_price_re = "中古価格：￥([\\d|,]+)"
+				lowest_used_price_md = /#{lowest_used_price_re}/.match(description)
+
+				url = item.xpath("link").text
+
+				bookoff_stock = StockInfo.new
+
+				if !lowest_new_price_md.nil?
+					bookoff_stock.lowest_new_price = Util::trim_chars(lowest_new_price_md[1])
+					bookoff_stock.lowest_used_price = Util::trim_chars(lowest_used_price_md[1])
+				end
+
+				bookoff_stock.selling_agent = "bookoffonline"
+				bookoff_stock.isbn = book.isbn
+				bookoff_stock.jan = book.jan
+				bookoff_stock.url = url
+
+				# bookoff_stock.print
+
+				bookoff_stock.print
+
+				return bookoff_stock
 			rescue => ex
+
+				puts "BookoffonlineのRSS解析時にエラーが発生しました。"
 
 				return nil
 			end
 
-			items = doc.xpath("//rss/channel/item")
-			item = items.first
-
-			description = item.xpath("description").text
-
-			lowest_new_price_re = "定価：￥(\\d+)"
-			lowest_new_price_md = /#{lowest_new_price_re}/.match(description)
-
-			lowest_used_price_re = "中古価格：￥(\\d+)"
-			lowest_used_price_md = /#{lowest_used_price_re}/.match(description)
-
-			url = item.xpath("link").text
-
-			bookoff_stock = StockInfo.new
-
-			if !lowest_new_price_md.nil?
-				bookoff_stock.lowest_new_price = lowest_new_price_md[1]
-				bookoff_stock.lowest_used_price = lowest_used_price_md[1]
-			end
-
-			bookoff_stock.selling_agent = "bookoffonline"
-			bookoff_stock.isbn = book.isbn
-			bookoff_stock.jan = book.jan
-			bookoff_stock.url = url
-
-			# bookoff_stock.print
-
-			return bookoff_stock
 		end
 end 
 
