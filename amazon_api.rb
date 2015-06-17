@@ -5,6 +5,7 @@ require 'uri'
 require 'kconv'
 require 'json'
 require './Util.rb'
+require './library_search.rb'
 # require 'pry'
 
 # todo: ActiveRecordを使うようにする
