@@ -8,6 +8,13 @@ class LibraryStock
 	attr_accessor :system_id
 	attr_accessor :status
 
+	def to_hash()
+		hash = {"system_id" => system_id,
+		        "status" => status}
+
+		return hash
+	end
+
 	def print
 		puts "system_id   : #{system_id}"
 		puts "status      : #{status}"
@@ -32,6 +39,26 @@ class Library
 	attr_accessor :geocode
 	attr_accessor :category
 	attr_accessor :image
+
+	def to_hash()
+		hash = {"system_id" => system_id,
+		        "system_name" => system_name,
+		        "libkey" => libkey,
+		        "libid" => libid,
+		        "short" => short,
+		        "formal" => formal,
+		        "url_pc" => url_pc,
+		        "address" => address,
+		        "pref" => pref,
+		        "city" => city,
+		        "post" => post,
+		        "tel" => tel,
+		        "geocode" => geocode,
+		        "category" => category,
+		        "image" => image}
+		        
+		return hash
+	end
 
 	def print()
 		puts "system_id   : #{system_id}"
