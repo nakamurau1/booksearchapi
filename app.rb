@@ -12,7 +12,7 @@ end
 
 # isbnで書籍情報とその在庫情報を取得します。
 # http://localhost:4567/api/v1/search/isbn/9784101181066/136.7163027,35.390516
-get '/api/v1/search/isbn/:isbn/:geocode?' do |isbn, geocode|
+get '/api/v1/search/isbn/:isbn/?:geocode?' do |isbn, geocode|
 	# 9784101181066
 	books, stocks = BookSearcher::search_by_isbn(isbn)
 
