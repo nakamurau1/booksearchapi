@@ -36,16 +36,7 @@ get '/api/v1/search/isbn/:isbn/?:geocode?' do |isbn, geocode|
 		# 近辺の図書館情報とその在庫情報を取得
 		lib_search = LibrarySearch.new()
 
-		near_libraries, lib_stocks = lib_search.search_stocks(isbn, geocode)
-
-		libraries_array = []
-		near_libraries.each do |library|
-			next if library == nil
-
-			libraries_array.push(library.to_hash)
-		end
-
-		hash["Libraries"] = libraries_array
+		lib_stocks = lib_search.search_stocks(isbn, geocode)
 
 		lib_stocks_array = []
 		lib_stocks.each do |lib_stock|

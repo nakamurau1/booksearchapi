@@ -7,10 +7,25 @@ require 'kconv'
 class LibraryStock
 	attr_accessor :system_id
 	attr_accessor :status
+	attr_accessor :library #Library
 
 	def to_hash()
 		hash = {"system_id" => system_id,
-		        "status" => status}
+		        "status" => status,
+		        "system_name" => library.system_name,
+		        "libkey" => library.libkey,
+		        "libid" => library.libid,
+		        "short" => library.short,
+		        "formal" => library.formal,
+		        "url_pc" => library.url_pc,
+		        "address" => library.address,
+		        "pref" => library.pref,
+		        "city" => library.city,
+		        "post" => library.post,
+		        "tel" => library.tel,
+		        "geocode" => library.geocode,
+		        "category" => library.category,
+		        "image" => library.image}
 
 		return hash
 	end
@@ -40,25 +55,25 @@ class Library
 	attr_accessor :category
 	attr_accessor :image
 
-	def to_hash()
-		hash = {"system_id" => system_id,
-		        "system_name" => system_name,
-		        "libkey" => libkey,
-		        "libid" => libid,
-		        "short" => short,
-		        "formal" => formal,
-		        "url_pc" => url_pc,
-		        "address" => address,
-		        "pref" => pref,
-		        "city" => city,
-		        "post" => post,
-		        "tel" => tel,
-		        "geocode" => geocode,
-		        "category" => category,
-		        "image" => image}
+	# def to_hash()
+	# 	hash = {"system_id" => system_id,
+	# 	        "system_name" => system_name,
+	# 	        "libkey" => libkey,
+	# 	        "libid" => libid,
+	# 	        "short" => short,
+	# 	        "formal" => formal,
+	# 	        "url_pc" => url_pc,
+	# 	        "address" => address,
+	# 	        "pref" => pref,
+	# 	        "city" => city,
+	# 	        "post" => post,
+	# 	        "tel" => tel,
+	# 	        "geocode" => geocode,
+	# 	        "category" => category,
+	# 	        "image" => image}
 		        
-		return hash
-	end
+	# 	return hash
+	# end
 
 	def print()
 		puts "system_id   : #{system_id}"
@@ -82,7 +97,11 @@ class LibrarySearch
 
 		library_stocks = self.search_stocks_by(isbn,near_libraries)
 
-		return near_libraries, library_stocks
+		library_stocks.each do |stock|
+			stock.library = near_libraries.find{|lib| lib.system_id = stock.system_id}
+		end
+
+		return library_stocks
 	end
 
 	:private
