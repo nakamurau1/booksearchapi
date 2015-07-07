@@ -98,7 +98,21 @@ class BookSearcher
 	# 	books : 書籍情報の一覧
 	def self.search_by_title(title)
 
-		books, stocks = self.search_by(title,false)
+		# 書籍のタイトルで検索
+		books, stocks = self.search_by(title,false,:title)
+
+		return books
+	end
+
+	# 著者名から書籍情報を検索します。
+	# 引数
+	#   author : 著者名
+	# 戻り値
+	# 	books : 書籍情報の一覧
+	def self.search_by_author(author)
+
+		# 著者名で検索
+		books, stocks = self.search_by(author,false,:author)
 
 		return books
 	end
@@ -106,9 +120,10 @@ class BookSearcher
 	:private
 
 		# Amazonの書籍情報を検索します
-		# keyword : 検索キーワード
+		# word : 検索キーワード
 		# search_stocks : 在庫情報を検索するか
-		def self.search_by(keyword, search_stocks)
+		# search_mode : タイトル(title), 著者(author), フリーワード(freeword)。規定値はフリーワード。
+		def self.search_by(word, search_stocks, search_mode = :freeword)
 
 			Amazon::Ecs.options = {
 				:associate_tag => ASSOCIATE_TAG,
@@ -116,14 +131,22 @@ class BookSearcher
 				:AWS_secret_key => AWS_SECRET_KEY
 			}
 
-			puts "検索ワード #{keyword}"
+			puts "検索ワード #{word}"
 
 			#商品検索
+			search_hash = {
+				:search_index => 'Books',
+				:response_group => 'Medium',
+				:country=>'jp'
+			}
+   		    case search_mode
+		    when :title, :author then
+		    	search_hash[search_mode] = word
+			end
+
 			res = Amazon::Ecs.item_search(
-				keyword,
-				{:search_index => 'Books',
-				 :response_group => 'Medium',
-				 :country=>'jp'}
+				word,
+				search_hash
 				)
 
 			books = []

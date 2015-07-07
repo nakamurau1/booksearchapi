@@ -70,3 +70,23 @@ get '/api/v1/search/title/:title' do |title|
 	return hash.to_json
 end
 
+# http://localhost:4567/api/v1/search/author/YUI
+get '/api/v1/search/author/:author' do |author|
+
+	books = BookSearcher::search_by_author(author)
+
+	books_array = []
+
+	books.each do |book|
+		next if book == nil
+
+		books_array.push(book.to_hash)
+	end
+
+	hash = {}
+	hash["BookInfos"] = books_array
+
+	return hash.to_json
+
+end
+
