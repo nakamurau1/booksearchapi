@@ -117,6 +117,19 @@ class BookSearcher
 		return books
 	end
 
+	# フリーワードから書籍情報を検索します。
+	# 引数
+	#   freeword : フリーワード
+	# 戻り値
+	# 	books : 書籍情報の一覧
+	def self.search_by_freeword(freeword)
+
+		# フリーワードで検索
+		books, stocks = self.search_by(freeword,false)
+
+		return books
+	end
+
 	:private
 
 		# Amazonの書籍情報を検索します
@@ -136,7 +149,7 @@ class BookSearcher
 			#商品検索
 			search_hash = {
 				:search_index => 'Books',
-				:response_group => 'Medium',
+				:response_group => 'Large',
 				:country=>'jp'
 			}
    		    case search_mode

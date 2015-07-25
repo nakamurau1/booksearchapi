@@ -90,3 +90,22 @@ get '/api/v1/search/author/:author' do |author|
 
 end
 
+# http://localhost:4567/api/v1/search/freeword/YUI
+get '/api/v1/search/freeword/:title' do |title|
+
+	books = BookSearcher::search_by_freeword(title)
+
+	books_array = []
+
+	books.each do |book|
+		next if book == nil
+
+		books_array.push(book.to_hash)
+	end
+
+	hash = {}
+	hash["BookInfos"] = books_array
+
+	return hash.to_json
+end
+
