@@ -169,7 +169,7 @@ class BookSearcher
 
 				new_book = Book.new
 
-				new_book.title = URI.unescape(item.get("ItemAttributes/Title"))
+				new_book.title = item.get("ItemAttributes/Title")
 				new_book.price = item.get("ItemAttributes/ListPrice/Amount")
 				new_book.image_url = item.get("MediumImage/URL")
 				new_book.isbn = item.get("ItemAttributes/ISBN")

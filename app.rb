@@ -3,11 +3,12 @@ require 'sinatra'
 require 'sinatra/reloader'
 require './amazon_api.rb'
 require 'json'
+# require 'pry'
 
 # ruby app.rb -o localhostで実行
 
 get '/' do
-  "Hello Taniguchi."
+  "Hello"
 end
 
 # isbnで書籍情報とその在庫情報を取得します。
@@ -23,7 +24,7 @@ get '/api/v1/search/isbn/:isbn/?:geocode?' do |isbn, geocode|
 	stocks_array = []
 
 	stocks.each do |stock|
-		next if stock == nil 
+		next if stock == nil
 
 		stocks_array.push(stock.to_hash)
 	end
@@ -31,7 +32,7 @@ get '/api/v1/search/isbn/:isbn/?:geocode?' do |isbn, geocode|
 	hash["Stocks"] = stocks_array
 
 	if geocode != nil
-	    # 位置情報が渡された時 
+	    # 位置情報が渡された時
 
 		# 近辺の図書館情報とその在庫情報を取得
 		lib_search = LibrarySearch.new()
@@ -108,4 +109,3 @@ get '/api/v1/search/freeword/:title' do |title|
 
 	return hash.to_json
 end
-
