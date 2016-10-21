@@ -5,6 +5,7 @@ GEM
       nokogiri (~> 1.4)
       ruby-hmac (~> 0.3)
     backports (3.6.8)
+    dotenv (2.1.1)
     mini_portile2 (2.1.0)
     multi_json (1.12.1)
     nokogiri (1.6.8.1)
@@ -32,10 +33,11 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  amazon-ecs
-  nokogiri
-  sinatra
-  sinatra-contrib
+  amazon-ecs (= 2.5.0)
+  dotenv (= 2.1.1)
+  nokogiri (= 1.6.8.1)
+  sinatra (= 1.4.7)
+  sinatra-contrib (= 1.4.7)
 
 RUBY VERSION
    ruby 2.3.0p0

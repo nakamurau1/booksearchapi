@@ -5,7 +5,6 @@ require 'uri'
 require 'kconv'
 require 'json'
 require './Util.rb'
-require './library_search.rb'
 # require 'pry'
 
 # todo: ActiveRecordを使うようにする
@@ -28,7 +27,7 @@ class Book
 		puts "publisher: #{@publisher}"
 		puts "asin  : #{@asin}"
 		puts "jan   : #{@jan}"
-		puts "------------------------------"		
+		puts "------------------------------"
 	end
 
 	def to_hash()
@@ -60,7 +59,7 @@ class StockInfo
 		puts "url              : #{@url}"
 		puts "isbn             : #{@isbn}"
 		puts "jan              : #{@jan}"
-		puts "------------------------------"		
+		puts "------------------------------"
 	end
 
 	def to_hash
@@ -76,10 +75,6 @@ class StockInfo
 end
 
 class BookSearcher
-
-	ASSOCIATE_TAG = "yuiweb-22"
-	AWS_ACCESS_KEY_ID = "AKIAJWBU6APZDQHRFEOQ"
-	AWS_SECRET_KEY = "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"
 
 	# isbnで書籍情報とその在庫情報を検索します。
 	# 引数
@@ -139,9 +134,9 @@ class BookSearcher
 		def self.search_by(word, search_stocks, search_mode = :freeword)
 
 			Amazon::Ecs.options = {
-				:associate_tag => ASSOCIATE_TAG,
-				:AWS_access_key_id => AWS_ACCESS_KEY_ID,
-				:AWS_secret_key => AWS_SECRET_KEY
+				:associate_tag => ENV["ASSOCIATE_TAG"],
+				:AWS_access_key_id => ENV["AWS_ACCESS_KEY_ID"],
+				:AWS_secret_key => ENV["AWS_SECRET_KEY"]
 			}
 
 			puts "検索ワード #{word}"
@@ -252,5 +247,4 @@ class BookSearcher
 			end
 
 		end
-end 
-
+end
