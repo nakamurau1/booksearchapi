@@ -70,7 +70,8 @@ get '/api/v1/search/freeword/:word' do |word|
 	hash = {}
 	hash["BookInfos"] = books_array
 
-	return hash.to_json
+  return hash.count
+	# return hash.to_json
 end
 
 error do
