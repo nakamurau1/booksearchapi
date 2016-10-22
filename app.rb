@@ -51,10 +51,7 @@ get '/api/v1/search/author/:author' do |author|
 end
 
 # フリーワード検索
-# タイトルで検索できる
 # http://localhost:4567/api/v1/search/freeword/YUI
-# ISBNでも検索可能
-# http://localhost:4567/api/v1/search/freeword/4101181063
 get '/api/v1/search/freeword/:word' do |word|
 
 	books = BookSearcher::search_by_freeword(word)
@@ -69,6 +66,33 @@ get '/api/v1/search/freeword/:word' do |word|
 
 	hash = {}
 	hash["BookInfos"] = books_array
+
+	return hash.to_json
+end
+
+# ISBN検索
+# http://localhost:4567/api/v1/search/isbn/4860521153
+get '/api/v1/search/isbn/:isbn' do |isbn|
+
+	books, stocks = BookSearcher::search_by_isbn(isbn)
+
+	books_array = []
+	books.each do |book|
+		next if book == nil
+
+		books_array.push(book.to_hash)
+	end
+
+  stocks_array = []
+  stocks.each do |stock|
+    next if stock == nil
+
+    stocks_array.push(stock.to_hash)
+  end
+
+	hash = {}
+	hash["BookInfos"] = books_array
+  hash["Stocks"] = stocks_array
 
 	return hash.to_json
 end
