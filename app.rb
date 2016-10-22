@@ -74,5 +74,5 @@ get '/api/v1/search/freeword/:word' do |word|
 end
 
 error do
-  puts "何やら様子がおかしいようです"
+  "何やら様子がおかしいようです"
 end
