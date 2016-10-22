@@ -8,7 +8,7 @@ require 'json'
 # ruby app.rb -o localhostで実行
 
 get '/' do
-  "Hello"
+  "Hello!"
 end
 
 # http://localhost:4567/api/v1/search/title/YUI
