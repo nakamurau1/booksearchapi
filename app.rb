@@ -72,3 +72,7 @@ get '/api/v1/search/freeword/:word' do |word|
 
 	return hash.to_json
 end
+
+error do
+  puts "何やら様子がおかしいようです"
+end
